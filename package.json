@@ -1,0 +1,25 @@
+{
+  "name": "angularappsdeployment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.4",
+    "path": "^0.12.7",
+    "unzipper": "^0.12.1"
+  }
+}
