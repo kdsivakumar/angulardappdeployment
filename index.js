@@ -17,7 +17,7 @@ app.use(function (req, res, next) {
   );
   next();
 });
-const folderPath = path.join(__dirname, "uploaded_apps");
+const folderPath = path.join(__dirname, "./uploaded_apps");
 
 // Check if the folder exists
 if (!fs.existsSync(folderPath)) {
