@@ -43,5 +43,5 @@ testem.log
 Thumbs.db
 
 #uploaded apps
-uploaded_apps/*
+/uploaded_apps
 /data/apiCallCounts.json

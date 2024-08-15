@@ -17,7 +17,16 @@ app.use(function (req, res, next) {
   );
   next();
 });
+const folderPath = path.join(__dirname, "uploaded_apps");
 
+// Check if the folder exists
+if (!fs.existsSync(folderPath)) {
+  // Create the folder if it does not exist
+  fs.mkdirSync(folderPath, { recursive: true });
+  console.log("Folder created:", folderPath);
+} else {
+  console.log("Folder already exists:", folderPath);
+}
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
