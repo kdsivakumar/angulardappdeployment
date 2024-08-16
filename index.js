@@ -31,7 +31,7 @@ if (!fs.existsSync(folderPath)) {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     //const folderName = req.params.appName;
-    const folderPath = path.join(__dirname, "uploaded_apps");
+    const folderPath = path.join(__dirname, "./uploaded_apps");
     fs.mkdirSync(folderPath, { recursive: true });
     cb(null, folderPath);
   },
@@ -41,6 +41,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+fs.readdir(folderPath, (err, files) => {
+  if (err) {
+    console.error(`Error reading directory ${folderPath}: ${err}`);
+    res.status(500).send("Error reading directory");
+    return;
+  }
+  files.forEach((file) => {
+    const filePath = path.join(folderPath, file);
+    app.use(express.static(filePath));
+  });
+});
+
 // Object to store port mappings
 const appPorts = {};
 
@@ -48,7 +60,7 @@ const appPorts = {};
 app.post("/api/createApp", upload.single("file"), (req, res) => {
   const update = req.query.update;
   const zipFilePath = req.file.path;
-  const folderPath = path.join(__dirname, "uploaded_apps");
+  const folderPath = path.join(__dirname, "./uploaded_apps");
   let folder;
   fs.readdir(folderPath, (err, files) => {
     if (err) {
@@ -73,7 +85,8 @@ app.post("/api/createApp", upload.single("file"), (req, res) => {
           // const port = 8000 + Object.keys(appPorts).length; // Start from port 8000
           // appPorts[appName] = port;
           const fullUrl = `${req.protocol}://${req.get("host")}`;
-
+          const filePath = path.join(folderPath, folder);
+          app.use(express.static(filePath));
           // [error] Unable to determine the framework type for angularappsdeployment
           const appUrl = `${fullUrl}/${folder}`; // Example URL structure
           res.json({ appUrl: appUrl });
@@ -101,7 +114,7 @@ app.delete("/folders/:folderName", (req, res) => {
   });
 });
 app.get("/folders", (req, res) => {
-  const folderPath = path.join(__dirname, "uploaded_apps");
+  const folderPath = path.join(__dirname, "./uploaded_apps");
   fs.readdir(folderPath, (err, files) => {
     if (err) {
       console.error(`Error reading directory ${folderPath}: ${err}`);
@@ -113,15 +126,17 @@ app.get("/folders", (req, res) => {
   });
 });
 app.get("/", (req, res) => {
-  const folderPath = path.join(__dirname, "uploaded_apps");
+  const folderPath = path.join(__dirname, "./uploaded_apps");
   fs.readdir(folderPath, (err, files) => {
     if (err) {
       console.error(`Error reading directory ${folderPath}: ${err}`);
       res.status(500).send("Error reading directory");
       return;
     }
-    // const folders = files.filter((file) => file !== "node_modules");
-    res.json({ folders: files });
+    const links = files.map(
+      (file) => `${req.protocol}://${req.get("host")}/${file}`
+    );
+    res.json({ folders: links });
   });
 });
 // Serve static files for each app dynamically
