@@ -9,18 +9,18 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-// Check if the file exists, and create it if it does not
-if (!fs.existsSync(jsonFilePath)) {
-  fs.writeFileSync(jsonFilePath, JSON.stringify({}), "utf8");
-  console.log("File created:", jsonFilePath);
-} else {
-  console.log("File already exists:", jsonFilePath);
-}
-
 let apiCallData = {
   totalCalls: 0,
   routes: {},
 };
+
+// Check if the file exists, and create it if it does not
+if (!fs.existsSync(jsonFilePath)) {
+  fs.writeFileSync(jsonFilePath, JSON.stringify(apiCallData), "utf8");
+  console.log("File created:", jsonFilePath);
+} else {
+  console.log("File already exists:", jsonFilePath);
+}
 
 // Function to initialize or load existing data from JSON file
 const loadAPICallData = () => {

@@ -112,6 +112,18 @@ app.get("/folders", (req, res) => {
     res.json({ folders: files });
   });
 });
+app.get("/", (req, res) => {
+  const folderPath = path.join(__dirname, "uploaded_apps");
+  fs.readdir(folderPath, (err, files) => {
+    if (err) {
+      console.error(`Error reading directory ${folderPath}: ${err}`);
+      res.status(500).send("Error reading directory");
+      return;
+    }
+    // const folders = files.filter((file) => file !== "node_modules");
+    res.json({ folders: files });
+  });
+});
 // Serve static files for each app dynamically
 app.use("/:appName", express.static(path.join(__dirname, "uploaded_apps")));
 
@@ -128,7 +140,6 @@ app.get("/:appName/*", (req, res) => {
   const indexPath = path.join(
     __dirname,
     "uploaded_apps",
-    appName,
     appName,
     "browser",
     "index.html"
