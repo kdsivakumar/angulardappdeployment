@@ -4,7 +4,9 @@ const path = require("path");
 const fs = require("fs");
 const unzipper = require("unzipper");
 const app = express();
-const { countAPICalls, apiCallData } = require("./countAPICalls");
+const { countAPICalls } = require("./countAPICalls");
+const apiCallData = require("./data/apiCallCounts.json");
+
 // Use the middleware for all API routes
 app.use(countAPICalls);
 
@@ -138,6 +140,10 @@ app.get("/", (req, res) => {
     );
     res.json({ folders: links });
   });
+});
+
+app.get("/apicount", (req, res) => {
+  res.json(apiCallData);
 });
 // Serve static files for each app dynamically
 app.use("/:appName", express.static(path.join(__dirname, "uploaded_apps")));
